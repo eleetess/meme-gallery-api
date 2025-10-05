@@ -12,12 +12,26 @@ let memes = [
   },
   { id: 2, title: "Success Kid", url: "https://i.imgur.com/example2.jpg" },
 ];
+//logging middleware
+function logger(req, res, next) {
+  console.log(`${req.method} ${req.url} at ${new Date().toISOString()}`);
+  next();
+}
+app.use(logger);
+
 //routes
+//root route
 app.get("/", (req, res) => {
   res.json({ message: "welcome to erica awesome server" });
 });
+
 app.get("/memes", (req, res) => {
   res.json(memes);
+});
+
+//test error route
+app.get("/error-test", (req, res) => {
+  throw new Error("Test error");
 });
 
 app.post("/memes", async (req, res) => {
@@ -28,6 +42,11 @@ app.post("/memes", async (req, res) => {
   const newMeme = { id: memes.length + 1, title, url };
   memes.push(newMeme);
   res.status(201).json(newMeme);
+});
+//error-handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Something went wrong!" });
 });
 
 app.listen(port, () => {
