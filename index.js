@@ -2,6 +2,7 @@ import express from "express";
 const app = express(); //creates express app
 app.use(express.json()); // JSON body parsing
 const port = 3000; //makes the url?
+import bcrypt from bcrypt;
 
 //middleware
 let memes = [
@@ -24,25 +25,29 @@ app.use(logger);
 app.get("/", (req, res) => {
   res.json({ message: "welcome to erica awesome server" });
 });
-
-app.get("/memes", (req, res) => {
-  res.json(memes);
+// register a user
+app.post("/auth/register",async (request, response) =>{
+ const { username, password } = request.body;
+ const user= await Prisma.user.create({
+  data:{
+    username: username,
+    password: hashedPassword,
+  },
+ })
 });
+
+//login a user
+app.post("auth/login", (request, response) =>{
+ const =
+})
+
+
 
 //test error route
 app.get("/error-test", (req, res) => {
   throw new Error("Test error");
 });
 
-app.post("/memes", async (req, res) => {
-  const { title, url } = req.body; // destructuring
-  if (!title || !url) {
-    return res.status(400).json({ error: "title and url are required" });
-  }
-  const newMeme = { id: memes.length + 1, title, url };
-  memes.push(newMeme);
-  res.status(201).json(newMeme);
-});
 //error-handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

@@ -1,8 +1,11 @@
 import { seedData } from "../seedData.js";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
 async function main() {
-  const user = await Prisma.user.create({
+  const user = await prisma.user.create({
     data: {
-      unsername: "Erica",
+      username: "Erica",
       password: "pass123",
     },
   });
