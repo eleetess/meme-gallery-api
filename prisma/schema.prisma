@@ -4,7 +4,6 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,21 +13,22 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-        
 
 model User {
-  id     Int     @id @default(autoincrement())
-  username String @unique
+  id       Int             @id @default(autoincrement())
+  username String          @unique
   password String
-  memes   Meme[]
+  memes    Meme[]
+  likes    UserLikesMeme[]
 }
 
 model Meme {
-  id     Int    @id @default(autoincrement())
-  title  String
-  url    String
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int
+  id      Int             @id @default(autoincrement())
+  title   String
+  url     String
+  user    User            @relation(fields: [userId], references: [id])
+  userId  Int
+  likedBy UserLikesMeme[]
 }
 
 model UserLikesMeme {

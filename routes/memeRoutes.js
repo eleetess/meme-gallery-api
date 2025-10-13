@@ -18,6 +18,8 @@ router.put("/:id", updateMemeById);
 
 router.delete("/:id", deleteMemeById);
 
+router.post("/:id", authenticate, userLikesMeme);
+
 router.get("/memes", (req, res) => {
   res.json(memes);
 });
