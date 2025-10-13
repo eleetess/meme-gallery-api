@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import authRouter from "./routes/authRoutes.js"; // import our router
@@ -30,6 +30,7 @@ function authenticateToken(req, res, next) {
     req.user = user;
     next();
   });
+  response.json({ token });
 }
 
 // =========================
