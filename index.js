@@ -1,59 +1,68 @@
 import express from "express";
-const app = express(); //creates express app
-app.use(express.json()); // JSON body parsing
-const port = 3000; //makes the url?
-import bcrypt from bcrypt;
+import jwt from "jsonwebtoken";
+import { PrismaClient } from "@prisma/client";
+import authRouter from "./routes/authRoutes.js"; // import our router
 
-//middleware
-let memes = [
-  {
-    id: 1,
-    title: "Distracted Boyfriend",
-    url: "https://i.imgur.com/example1.jpg",
-  },
-  { id: 2, title: "Success Kid", url: "https://i.imgur.com/example2.jpg" },
-];
-//logging middleware
-function logger(req, res, next) {
+const app = express();
+const prisma = new PrismaClient();
+const port = 3000;
+
+app.use(express.json());
+
+// =========================
+// Middleware: Logger
+// =========================
+app.use((req, res, next) => {
   console.log(`${req.method} ${req.url} at ${new Date().toISOString()}`);
   next();
+});
+
+// =========================
+// Middleware: Authenticate JWT
+// =========================
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, "secretkey", (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
 }
-app.use(logger);
 
-//routes
-//root route
+// =========================
+// Routes
+// =========================
+app.use("/auth", authRouter); // Mount auth routes under /auth
+
+// Protected route example
+app.post("/memes", authenticateToken, async (req, res) => {
+  const { title, url } = req.body;
+  const meme = await prisma.meme.create({
+    data: { title, url, userId: req.user.userId },
+  });
+  res.status(201).json(meme);
+});
+
+// Root route
 app.get("/", (req, res) => {
-  res.json({ message: "welcome to erica awesome server" });
-});
-// register a user
-app.post("/auth/register",async (request, response) =>{
- const { username, password } = request.body;
- const user= await Prisma.user.create({
-  data:{
-    username: username,
-    password: hashedPassword,
-  },
- })
+  res.json({ message: "Welcome to Erica's awesome server" });
 });
 
-//login a user
-app.post("auth/login", (request, response) =>{
- const =
-})
-
-
-
-//test error route
+// Error test route
 app.get("/error-test", (req, res) => {
   throw new Error("Test error");
 });
 
-//error-handling middleware
+// Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: "Something went wrong!" });
 });
 
+// Start the server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
-}); // soul of the app what makes it work
+});

@@ -1,3 +1,6 @@
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
 import { memes } from "../model/memeData.js";
 export const getAllMemes = (request, response) => {
   response.json(memes);

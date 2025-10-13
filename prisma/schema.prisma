@@ -30,3 +30,13 @@ model Meme {
   user   User   @relation(fields: [userId], references: [id])
   userId Int
 }
+
+model UserLikesMeme {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  meme   Meme @relation(fields: [memeId], references: [id])
+  userId Int
+  memeId Int
+
+  @@unique([userId, memeId])
+}

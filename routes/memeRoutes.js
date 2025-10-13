@@ -5,16 +5,18 @@ import {
   updateMemeById,
   deleteMemeById,
   addMeme,
-} from "../controllers/memeController";
+} from "../controllers/memeController.js";
 const router = express.Router();
+
+router.get("/", getAllMemes);
 
 router.get("/:id", getMemeById);
 
-router.post("/", createMeme);
+router.post("/", authenticate, addMeme);
 
-router.put("/:id", updateMeme);
+router.put("/:id", updateMemeById);
 
-router.delete("/:id", deleteMeme);
+router.delete("/:id", deleteMemeById);
 
 router.get("/memes", (req, res) => {
   res.json(memes);
