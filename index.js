@@ -2,6 +2,9 @@ import express, { response } from "express";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import authRouter from "./routes/authRoutes.js"; // import our router
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const prisma = new PrismaClient();
