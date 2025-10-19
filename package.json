@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
   "start": "node dist/index.js",
-  "dev": "nodemon --watch src --exec 'node --loader ts-node/esm src/index.js --no-warnings'",
+  "dev": "nodemon --watch src --exec 'node --loader ts-node/esm src/index.ts --no-warnings'",
   "build": "tsc -p tsconfig.json"
 },
   "keywords": [],
