@@ -11,7 +11,13 @@ const prisma = new PrismaClient();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-
+//define different memes
+interface Meme {
+  id: number;
+  title: string;
+  url: string;
+  userId: number;
+}
 // =========================
 // Middleware: Logger
 // =========================
@@ -49,6 +55,7 @@ app.post("/memes", authenticateToken, async (req, res) => {
   });
   res.status(201).json(meme);
 });
+//
 
 // Root route
 app.get("/", (req, res) => {

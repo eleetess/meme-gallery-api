@@ -5,7 +5,7 @@ import {
   updateMemeById,
   deleteMemeById,
   addMeme,
-} from "../controllers/memeController.js";
+} from "../src/controllers/memeController.js";
 const router = express.Router();
 
 router.get("/", getAllMemes);
