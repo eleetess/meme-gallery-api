@@ -1,9 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import router from "./routes/memeRoutes.js";
-import authRouter from "./routes/authRoutes.js"; // import our router
+import authRouter from "./routes/authRoutes.js";
 import { PrismaClient } from "@prisma/client";
-
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -13,10 +12,9 @@ const prisma = new PrismaClient();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-//define different memes
 
 // =========================
-// Middleware: Logger
+// Logger Middleware
 // =========================
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url} at ${new Date().toISOString()}`);
@@ -24,7 +22,7 @@ app.use((req, res, next) => {
 });
 
 // =========================
-// Middleware: Authenticate JWT
+// Authenticate JWT Middleware
 // =========================
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
@@ -36,20 +34,18 @@ function authenticateToken(req, res, next) {
     req.user = user;
     next();
   });
-  response.json({ token });
 }
 
 // =========================
 // Routes
 // =========================
-app.use("/auth", authRouter); // Mount auth routes under /auth
-//use meme router from demo memeroutes.js
-// Root route
+app.use("/auth", authRouter);
+app.use("/memes", router);
+
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Erica's awesome server" });
 });
 
-// Error test route
 app.get("/error-test", (req, res) => {
   throw new Error("Test error");
 });
@@ -62,5 +58,5 @@ app.use((err, req, res, next) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server running on ${port}`);
+  console.log(`Server running on port ${port}`);
 });
