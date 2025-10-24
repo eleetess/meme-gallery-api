@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon --loader ts-node/esm --no-warnings src/index.js",
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
