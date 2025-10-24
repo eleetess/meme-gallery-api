@@ -1,7 +1,9 @@
-import express, { response } from "express";
+import express from "express";
 import jwt from "jsonwebtoken";
+import router from "./routes/memeRoutes.js";
+import authRouter from "./routes/authRoutes.js"; // import our router
 import { PrismaClient } from "@prisma/client";
-import authRouter from "./src/routes/authRoutes.js"; // import our router
+
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -12,12 +14,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 //define different memes
-interface Meme {
-  id: number;
-  title: string;
-  url: string;
-  userId: number;
-}
+
 // =========================
 // Middleware: Logger
 // =========================
@@ -46,17 +43,7 @@ function authenticateToken(req, res, next) {
 // Routes
 // =========================
 app.use("/auth", authRouter); // Mount auth routes under /auth
-
-// Protected route example
-app.post("/memes", authenticateToken, async (req, res) => {
-  const { title, url } = req.body;
-  const meme = await prisma.meme.create({
-    data: { title, url, userId: req.user.userId },
-  });
-  res.status(201).json(meme);
-});
-//
-
+//use meme router from demo memeroutes.js
 // Root route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Erica's awesome server" });
