@@ -5,7 +5,25 @@ import {
   updateMemeById,
   deleteMemeById,
   addMeme,
+  userLikesMeme,
 } from "../controllers/memeController.js";
+// middleware to authenticate users
+export const authenticate = (request, response, next) => {
+  const authHeader = request.headers.authorization;
+
+  const token = authHeader.split(" ")[1];
+
+  // verify a token symmetric
+  jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
+    if (err)
+      response.status(401).json({ error: "invalid credentials. JWT missing" });
+
+    // add user information from JWT
+    request.user = decoded; // create user property in request object
+
+    next();
+  });
+};
 const router = express.Router();
 
 router.get("/", getAllMemes);

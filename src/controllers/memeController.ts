@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import type { Request, Response, NextFunction } from "express";
-import type { Meme } from "../index.js";
-
+import type { Meme } from "../types/types.js";
 const prisma = new PrismaClient();
 
 import { memeSchema } from "../utils/validation.js";
