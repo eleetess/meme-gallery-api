@@ -1,4 +1,5 @@
-import express, { Router } from "express";
+import express from "express";
+import jwt from "jsonwebtoken";
 import {
   getAllMemes,
   getMemeById,
@@ -7,49 +8,40 @@ import {
   addMeme,
   userLikesMeme,
 } from "../controllers/memeController.js";
-// middleware to authenticate users
+
+const router = express.Router();
+
+// ===============================
+// Middleware: Authenticate users
+// ===============================
 export const authenticate = (request, response, next) => {
   const authHeader = request.headers.authorization;
+  if (!authHeader) {
+    return response.status(401).json({ error: "Authorization header missing" });
+  }
 
   const token = authHeader.split(" ")[1];
 
-  // verify a token symmetric
   jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
-    if (err)
-      response.status(401).json({ error: "invalid credentials. JWT missing" });
+    if (err) {
+      return response
+        .status(401)
+        .json({ error: "Invalid credentials. JWT missing or invalid." });
+    }
 
-    // add user information from JWT
-    request.user = decoded; // create user property in request object
-
+    request.user = decoded;
     next();
   });
 };
-const router = express.Router();
 
-router.get("/", getAllMemes);
-
-router.get("/:id", getMemeById);
-
-router.post("/", authenticate, addMeme);
-
-router.put("/:id", updateMemeById);
-
-router.delete("/:id", deleteMemeById);
-
-router.post("/:id", authenticate, userLikesMeme);
-
-router.get("/memes", (req, res) => {
-  res.json(memes);
-});
-
-router.post("/memes", async (req, res) => {
-  const { title, url } = req.body; // destructuring
-  if (!title || !url) {
-    return res.status(400).json({ error: "title and url are required" });
-  }
-  const newMeme = { id: memes.length + 1, title, url };
-  memes.push(newMeme);
-  res.status(201).json(newMeme);
-});
+// ===============================
+// Meme Routes
+// ===============================
+router.get("/", getAllMemes); // GET /memes
+router.get("/:id", getMemeById); // GET /memes/:id
+router.post("/", authenticate, addMeme); // POST /memes
+router.put("/:id", updateMemeById); // PUT /memes/:id
+router.delete("/:id", deleteMemeById); // DELETE /memes/:id
+router.post("/:id/like", authenticate, userLikesMeme); // POST /memes/:id/like
 
 export default router;
