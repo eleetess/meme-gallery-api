@@ -18,13 +18,16 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 // CORS middleware — fixed
-app.use(
-  cors({
-    origin: "http://localhost:5173", // your frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+let corsOptions = {
+  origin: [
+    "https://dq63yhafhwp12.cloudfront.net/", // CloudFront
+    "http://dev-meme-erica.s3-website-us-east-1.amazonaws.com/", // S3 website
+    "http://localhost:5173", // Vite dev
+  ],
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.use(cors(corsOptions));
 
 // Logger middleware
 app.use((req, res, next) => {
