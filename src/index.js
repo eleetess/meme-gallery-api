@@ -20,8 +20,8 @@ app.use(express.json());
 // CORS middleware — fixed
 let corsOptions = {
   origin: [
-    "https://dq63yhafhwp12.cloudfront.net/", // CloudFront
-    "http://dev-meme-erica.s3-website-us-east-1.amazonaws.com/", // S3 website
+    "https://dq63yhafhwp12.cloudfront.net", // CloudFront
+    "http://dev-meme-erica.s3-website-us-east-1.amazonaws.com", // S3 website
     "http://localhost:5173", // Vite dev
   ],
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
